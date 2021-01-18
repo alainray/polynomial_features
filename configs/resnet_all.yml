@@ -1,1 +1,12 @@
+settings: 
+  squares: True
+  hshift: True
+  vshift: True
 
+  train_bs: 128
+  val_bs: 256
+  lr: 0.001
+
+  # Experiment Settings
+  seed: 1234
+  epochs: 50
