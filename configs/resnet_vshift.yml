@@ -1,1 +1,9 @@
-
+settings: 
+  squares: False
+  hshift: False
+  vshift: True
+  train_bs: 128
+  val_bs: 256
+  lr: 0.001
+  seed: 1234
+  epochs: 50
