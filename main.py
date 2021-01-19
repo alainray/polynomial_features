@@ -81,6 +81,7 @@ def train(model, dl, args):
                                                                  loss_m.val,
                                                                  100*acc_m.avg,
                                                                  100*acc_m.val), end="")
+    return loss_m.avg, acc_m.avg
 
 def test(model, dl, args):
     model.eval()
@@ -106,6 +107,7 @@ def test(model, dl, args):
                                                                     loss_m.val,
                                                                     100*acc_m.avg,
                                                                     100*acc_m.val), end="")
+    return loss_m.avg, acc_m.avg
 
 # Args settings
 parser = argparse.ArgumentParser(description='')
@@ -159,8 +161,14 @@ model = model.to(args.device)
 opt = Adam(model.parameters(), lr=args.lr)
 criterion = CrossEntropyLoss()
 
+metrics = {'loss_train': [], 'loss_val': [], 'acc_train': [], 'acc_val': []}
+
 for epoch in range(1, args.epochs+1):
     print("Epoch {}:".format(epoch))
-
-    train(model, train_dl, args)
-    test(model, val_dl, args)
+    tr_loss, tr_acc = train(model, train_dl, args)
+    tst_loss, tr_acc = test(model, val_dl, args)
+    metrics['loss_train'].append(tr_loss)
+    metrics['loss_val'].append(tr_acc)
+    metrics['acc_train'].append(tst_loss)
+    metrics['acc_val'].append(tst_acc
+    torch.save(metrics, params.config.split(".")[0] + "_results.pth")
