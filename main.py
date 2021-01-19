@@ -114,20 +114,10 @@ parser = argparse.ArgumentParser(description='')
 parser.add_argument('--config',default='',type=str, required=True)
 
 params = parser.parse_args()
-
-args = yaml.load(params.config, Loader=yaml.FullLoader)
-
-args.squares = True
-args.hshift = True
-args.vshift = True
-
-args.train_bs = 128
-args.val_bs = 256
-args.lr = 0.001
-
-# Experiment Settings
-args.seed = 1234
-args.epochs = 2
+f = open(params.config, "r")
+args = yaml.load(f, Loader=yaml.FullLoader)['settings']
+f.close()
+args = edict(args)
 # Env settings
 args.device = "cuda" if torch.cuda.is_available() else "cpu"
 # Data settings
@@ -166,9 +156,9 @@ metrics = {'loss_train': [], 'loss_val': [], 'acc_train': [], 'acc_val': []}
 for epoch in range(1, args.epochs+1):
     print("Epoch {}:".format(epoch))
     tr_loss, tr_acc = train(model, train_dl, args)
-    tst_loss, tr_acc = test(model, val_dl, args)
+    tst_loss, tst_acc = test(model, val_dl, args)
     metrics['loss_train'].append(tr_loss)
     metrics['loss_val'].append(tr_acc)
     metrics['acc_train'].append(tst_loss)
-    metrics['acc_val'].append(tst_acc
+    metrics['acc_val'].append(tst_acc)
     torch.save(metrics, params.config.split(".")[0] + "_results.pth")
